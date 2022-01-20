@@ -25,4 +25,16 @@ function getData(){
         });
     }
 
-getData();
+// getData();
+// retrieve long/lats from Postcode API
+let longLat = [];
+const postCode = prompt("Please specify a postcode: ");
+fetch(`http://api.postcodes.io/postcodes/${postCode}`)
+.then(response => response.json())
+.then(async body => {
+    const longitude = await body.result.longitude;
+    const latitude = await body.result.latitude;
+    console.log(latitude, longitude);
+    longLat.push(latitude);
+    longLat.push(longitude)
+});
