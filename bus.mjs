@@ -1,6 +1,3 @@
-// const fetch = require('node-fetch');
-// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-// const ps = require('prompt-sync');
 import ps from 'prompt-sync';
 import fetch from "node-fetch";
 const prompt = ps();
@@ -25,7 +22,6 @@ function getData(){
         });
     }
 
-// getData();
 // retrieve long/lats from Postcode API
 
 async function getStopsByPostcode(){
