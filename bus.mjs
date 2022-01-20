@@ -28,58 +28,60 @@ function getData(){
 // getData();
 // retrieve long/lats from Postcode API
 
-
-const postCode = prompt("Please specify a postcode: ");
-
-const postcodeResponse = await fetch(`http://api.postcodes.io/postcodes/${postCode}`);
-const body = await postcodeResponse.json();
-const longitude = body.result.longitude;
-const latitude = body.result.latitude;
-
-// get closest stops from TFL API using long/lat
-const validStop = [
-    "CarPickupSetDownArea",
-    "NaptanAirAccessArea",
-    "NaptanAirEntrance",
-    "NaptanAirportBuilding",
-    "NaptanBusCoachStation",
-    "NaptanBusWayPoint",
-    "NaptanCoachAccessArea",
-    "NaptanCoachBay",
-    "NaptanCoachEntrance",
-    "NaptanCoachServiceCoverage",
-    "NaptanCoachVariableBay",
-    "NaptanFerryAccessArea",
-    "NaptanFerryBerth",
-    "NaptanFerryEntrance",
-    "NaptanFerryPort",
-    "NaptanFlexibleZone",
-    "NaptanHailAndRideSection",
-    "NaptanLiftCableCarAccessArea",
-    "NaptanLiftCableCarEntrance",
-    "NaptanLiftCableCarStop",
-    "NaptanLiftCableCarStopArea",
-    "NaptanMarkedPoint",
-    "NaptanMetroAccessArea",
-    "NaptanMetroEntrance",
-    "NaptanMetroPlatform",
-    "NaptanMetroStation",
-    "NaptanOnstreetBusCoachStopCluster",
-    "NaptanOnstreetBusCoachStopPair",
-    "NaptanPrivateBusCoachTram",
-    "NaptanPublicBusCoachTram",
-    "NaptanRailAccessArea",
-    "NaptanRailEntrance",
-    "NaptanRailPlatform",
-    "NaptanRailStation",
-    "NaptanSharedTaxi",
-    "NaptanTaxiRank",
-    "NaptanUnmarkedPoint",
-    "TransportInterchange"
-  ]
-
-const joinedTypes = validStop.join(',');
-
-const response = await fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${latitude}&lon=${longitude}&stopTypes=${joinedTypes}`);
-const busStops = await response.json();
-console.log(busStops);
+async function getStopsByPostcode(){
+    const postCode = prompt("Please specify a postcode: ");
+    
+    const postcodeResponse = await fetch(`http://api.postcodes.io/postcodes/${postCode}`);
+    const body = await postcodeResponse.json();
+    const longitude = body.result.longitude;
+    const latitude = body.result.latitude;
+    
+    // get closest stops from TFL API using long/lat
+    const validStop = [
+        "CarPickupSetDownArea",
+        "NaptanAirAccessArea",
+        "NaptanAirEntrance",
+        "NaptanAirportBuilding",
+        "NaptanBusCoachStation",
+        "NaptanBusWayPoint",
+        "NaptanCoachAccessArea",
+        "NaptanCoachBay",
+        "NaptanCoachEntrance",
+        "NaptanCoachServiceCoverage",
+        "NaptanCoachVariableBay",
+        "NaptanFerryAccessArea",
+        "NaptanFerryBerth",
+        "NaptanFerryEntrance",
+        "NaptanFerryPort",
+        "NaptanFlexibleZone",
+        "NaptanHailAndRideSection",
+        "NaptanLiftCableCarAccessArea",
+        "NaptanLiftCableCarEntrance",
+        "NaptanLiftCableCarStop",
+        "NaptanLiftCableCarStopArea",
+        "NaptanMarkedPoint",
+        "NaptanMetroAccessArea",
+        "NaptanMetroEntrance",
+        "NaptanMetroPlatform",
+        "NaptanMetroStation",
+        "NaptanOnstreetBusCoachStopCluster",
+        "NaptanOnstreetBusCoachStopPair",
+        "NaptanPrivateBusCoachTram",
+        "NaptanPublicBusCoachTram",
+        "NaptanRailAccessArea",
+        "NaptanRailEntrance",
+        "NaptanRailPlatform",
+        "NaptanRailStation",
+        "NaptanSharedTaxi",
+        "NaptanTaxiRank",
+        "NaptanUnmarkedPoint",
+        "TransportInterchange"
+      ]
+    
+    const joinedTypes = validStop.join(',');
+    
+    const response = await fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${latitude}&lon=${longitude}&stopTypes=${joinedTypes}`);
+    const busStops = await response.json();
+    console.log(busStops);
+}
+getStopsByPostcode();
