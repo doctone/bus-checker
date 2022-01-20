@@ -4,9 +4,9 @@
 import ps from 'prompt-sync';
 import fetch from "node-fetch";
 const prompt = ps();
+const API_KEY = "75d6773ad7b647d199cd728959050908";
 
 function getData(){
-    const API_KEY = "75d6773ad7b647d199cd728959050908";
     const id = prompt("Please specify a Location ID:");
     
     fetch(`https://api.tfl.gov.uk/StopPoint/${id}/Arrivals?api-key=${API_KEY}`)
@@ -27,14 +27,59 @@ function getData(){
 
 // getData();
 // retrieve long/lats from Postcode API
-let longLat = [];
+
+
 const postCode = prompt("Please specify a postcode: ");
-fetch(`http://api.postcodes.io/postcodes/${postCode}`)
-.then(response => response.json())
-.then(async body => {
-    const longitude = await body.result.longitude;
-    const latitude = await body.result.latitude;
-    console.log(latitude, longitude);
-    longLat.push(latitude);
-    longLat.push(longitude)
-});
+
+const postcodeResponse = await fetch(`http://api.postcodes.io/postcodes/${postCode}`);
+const body = await postcodeResponse.json();
+const longitude = body.result.longitude;
+const latitude = body.result.latitude;
+
+// get closest stops from TFL API using long/lat
+const validStop = [
+    "CarPickupSetDownArea",
+    "NaptanAirAccessArea",
+    "NaptanAirEntrance",
+    "NaptanAirportBuilding",
+    "NaptanBusCoachStation",
+    "NaptanBusWayPoint",
+    "NaptanCoachAccessArea",
+    "NaptanCoachBay",
+    "NaptanCoachEntrance",
+    "NaptanCoachServiceCoverage",
+    "NaptanCoachVariableBay",
+    "NaptanFerryAccessArea",
+    "NaptanFerryBerth",
+    "NaptanFerryEntrance",
+    "NaptanFerryPort",
+    "NaptanFlexibleZone",
+    "NaptanHailAndRideSection",
+    "NaptanLiftCableCarAccessArea",
+    "NaptanLiftCableCarEntrance",
+    "NaptanLiftCableCarStop",
+    "NaptanLiftCableCarStopArea",
+    "NaptanMarkedPoint",
+    "NaptanMetroAccessArea",
+    "NaptanMetroEntrance",
+    "NaptanMetroPlatform",
+    "NaptanMetroStation",
+    "NaptanOnstreetBusCoachStopCluster",
+    "NaptanOnstreetBusCoachStopPair",
+    "NaptanPrivateBusCoachTram",
+    "NaptanPublicBusCoachTram",
+    "NaptanRailAccessArea",
+    "NaptanRailEntrance",
+    "NaptanRailPlatform",
+    "NaptanRailStation",
+    "NaptanSharedTaxi",
+    "NaptanTaxiRank",
+    "NaptanUnmarkedPoint",
+    "TransportInterchange"
+  ]
+
+const joinedTypes = validStop.join(',');
+
+const response = await fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${latitude}&lon=${longitude}&stopTypes=${joinedTypes}`);
+const busStops = await response.json();
+console.log(busStops);
