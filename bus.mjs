@@ -3,8 +3,7 @@ import fetch from "node-fetch";
 const prompt = ps();
 const API_KEY = "75d6773ad7b647d199cd728959050908";
 
-function getData(){
-    const id = prompt("Please specify a Location ID:");
+function nextArrivalTime(id){
     
     fetch(`https://api.tfl.gov.uk/StopPoint/${id}/Arrivals?api-key=${API_KEY}`)
         .then(response => response.json())
@@ -76,7 +75,7 @@ async function getStopsByPostcode(){
     
     const joinedTypes = validStop.join(',');
     
-    const response = await fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${latitude}&lon=${longitude}&stopTypes=${joinedTypes}&radius=1000`);
+    const response = await fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${latitude}&lon=${longitude}&stopTypes=${joinedTypes}&radius=1500`);
     const busStops = await response.json()
     const stops = busStops.stopPoints;
     stops.sort((stop1, stop2) => stop1.distance - stop2.distance);
@@ -89,5 +88,8 @@ async function getStopsByPostcode(){
             console.log(`your second nearest stop is ${nearestStop}. Only slightly further at ${Math.round(stops[i].distance)} yards away.`);
         }
     }
+    const busId = stops[0].children[0].id;
+    console.log("-----------------------");
+    nextArrivalTime(busId);
 }
 getStopsByPostcode();
