@@ -76,8 +76,18 @@ async function getStopsByPostcode(){
     
     const joinedTypes = validStop.join(',');
     
-    const response = await fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${latitude}&lon=${longitude}&stopTypes=${joinedTypes}`);
-    const busStops = await response.json();
-    console.log(busStops);
+    const response = await fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${latitude}&lon=${longitude}&stopTypes=${joinedTypes}&radius=1000`);
+    const busStops = await response.json()
+    const stops = busStops.stopPoints;
+    stops.sort((stop1, stop2) => stop1.distance - stop2.distance);
+    // print closest two
+    for (let i=0; i<2; i++){
+        const nearestStop = stops[i].children[0].commonName;
+        if (i==0){
+            console.log(`your nearest stop is ${nearestStop}. It's ${Math.round(stops[i].distance)} yards away.`);
+        } else {
+            console.log(`your second nearest stop is ${nearestStop}. Only slightly further at ${Math.round(stops[i].distance)} yards away.`);
+        }
+    }
 }
 getStopsByPostcode();
