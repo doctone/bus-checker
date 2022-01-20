@@ -4,18 +4,32 @@
 import ps from 'prompt-sync';
 import fetch from "node-fetch";
 const prompt = ps();
+const API_KEY = "75d6773ad7b647d199cd728959050908";
 
-function getData(){
-    const API_KEY = "75d6773ad7b647d199cd728959050908";
-    const id = prompt("Please specify a Location ID:");
-    
-    fetch(`https://api.tfl.gov.uk/StopPoint/${id}/Arrivals?api-key=${API_KEY}`)
+async function getLongAndLatFromPostcode(){
+    let longLat = [];
+    const postCode = prompt("Please specify a postcode: ");
+    fetch(`http://api.postcodes.io/postcodes/${postCode}`)
+    .then(response => response.json())
+    .then(body => {
+        const longitude = await body.result.longitude;
+        const latitude = await body.result.latitude;
+        console.log(postCodeLatitude, postCodeLongitude);
+        longLat.push(postCodeLatitude);
+        longLat.push(postCodeLongitude);
+        return longLat;
+        // findBusStops(latitude, longitude);
+    });
+}
+console.log(getLongAndLatFromPostcode());
+
+function findBusStops(lat, lon){
+    fetch(`https://api.tfl.gov.uk/StopPoint/?lat=${lat}&lon=${lon}&stopTypes=NaptanPublicBusCoachTram`)
         .then(response => response.json())
         .then(body => {
-            for (let i=0; i<5; i++){
-            console.log(body[i]);
-                }
-            });
-}
-
-getData();
+            
+        });
+    }
+// getData();
+// getLongAndLatFromPostcode();
+// not finding any bus stops near
