@@ -69,8 +69,8 @@ async function getStopsByPostcode(){
                     validStops.push(stop);
                     }
                 }
-            const stop1 = validStops[0].children[0]
-            const stop2 = validStops[1].children[0]
+            const stop1 = validStops[0]
+            const stop2 = validStops[1]
             await printNearestStops(stop1, stop2);
             // console.log(stop1,stop2);
             }
@@ -103,14 +103,17 @@ async function nextArrivalTime(id){
 getStopsByPostcode();
 
 async function printNearestStops(stop1, stop2){
-    console.log(`Your nearest stop is ${stop1.commonName}.`);
-    console.log(`Your second nearest stop is ${stop2.commonName}.`);
+    const nearestStop = stop1.children[0]
+    const secondNearestStop = stop2.children[0]
+
+    console.log(`Your nearest stop is ${nearestStop.commonName}, just ${Math.floor(stop1.distance)}m away.`);
+    console.log(`Your second nearest stop is ${secondNearestStop.commonName}, ${Math.floor(stop2.distance)}m away.`);
     console.log("-----------------------");
-    console.log(`----Buses from ${stop1.commonName}----`);
+    console.log(`----Buses from ${nearestStop.commonName}----`);
     console.log("-----------------------");
-    await nextArrivalTime(stop1.naptanId);
+    await nextArrivalTime(nearestStop.naptanId);
     console.log("-----------------------");
-    console.log(`----Buses from ${stop2.commonName}----`);
+    console.log(`----Buses from ${secondNearestStop.commonName}----`);
     console.log("-----------------------");
-    await nextArrivalTime(stop2.naptanId);
+    await nextArrivalTime(secondNearestStop.naptanId);
 }
