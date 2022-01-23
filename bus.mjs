@@ -9,7 +9,7 @@ async function getStopsByPostcode(){
     const postcodeResponse = await fetch(`http://api.postcodes.io/postcodes/${postCode}`);
     try {
         const body = await postcodeResponse.json();
-        
+    
         const longitude = body.result.longitude;
         const latitude = body.result.latitude;
         
@@ -69,8 +69,8 @@ async function getStopsByPostcode(){
                     validStops.push(stop);
                     }
                 }
-            const stop1 = validStops[0]
-            const stop2 = validStops[1]
+            const stop1 = validStops[0];
+            const stop2 = validStops[1];
             await printNearestStops(stop1, stop2);
             // console.log(stop1,stop2);
             }
@@ -87,7 +87,7 @@ async function nextArrivalTime(id){
             busses.sort((bus1, bus2) => bus1.timeToStation - bus2.timeToStation );
             if (busses.length === 0){
                 console.log("There aren't any buses near to you");
-            } else { const numOfBuses = 2 || 1;
+            } else { const numOfBuses =  2 || 1;
             for (let i = 0; i<numOfBuses; i++){
                 console.log(
                     "Bus to " +
@@ -100,12 +100,13 @@ async function nextArrivalTime(id){
         }
         });
     }
-getStopsByPostcode();
-
+    
 async function printNearestStops(stop1, stop2){
     const nearestStop = stop1.children[0]
     const secondNearestStop = stop2.children[0]
-
+    console.log('-----------------------');
+    console.log('---BUS ARRIVAL TIMES---');
+    console.log('-----------------------');
     console.log(`Your nearest stop is ${nearestStop.commonName}, just ${Math.floor(stop1.distance)}m away.`);
     console.log(`Your second nearest stop is ${secondNearestStop.commonName}, ${Math.floor(stop2.distance)}m away.`);
     console.log("-----------------------");
@@ -117,3 +118,4 @@ async function printNearestStops(stop1, stop2){
     console.log("-----------------------");
     await nextArrivalTime(secondNearestStop.naptanId);
 }
+getStopsByPostcode();
