@@ -69,18 +69,30 @@ async function getStopsByPostcode(){
                     validStops.push(stop);
                     }
                 }
-            const stop1 = validStops[0];
-            const stop2 = validStops[1];
-            await printNearestStops(stop1, stop2);
+            await printNearestStops(validStops);
             // console.log(stop1,stop2);
             }
         }
     catch (err) {
         console.log("Sorry! Invalid postcode");
+        getStopsByPostcode();
+    }
+}
+async function printNearestStops(validStops){
+    console.log('-----------------------');
+    console.log('---BUS ARRIVAL TIMES---');
+    console.log('-----------------------');
+    for (let i=0; i < (validStops.length > 1 ? 2: 1); i++){
+        console.log(`${validStops[i].commonName} is ${Math.ceil(validStops[i].distance)}m away.`);
+        console.log(`----Buses from ${validStops[i].commonName}----`);
+        console.log("-----------------------");
+        await printNextArrivalTime(validStops[i].children[0].id);
+        console.log("-----------------------");
+
     }
 }
 
-async function nextArrivalTime(id){
+async function printNextArrivalTime(id){
     await fetch(`https://api.tfl.gov.uk/StopPoint/${id}/Arrivals?api-key=${API_KEY}`)
         .then(response => response.json())
         .then(busses => {
@@ -101,21 +113,5 @@ async function nextArrivalTime(id){
         });
     }
     
-async function printNearestStops(stop1, stop2){
-    const nearestStop = stop1.children[0]
-    const secondNearestStop = stop2.children[0]
-    console.log('-----------------------');
-    console.log('---BUS ARRIVAL TIMES---');
-    console.log('-----------------------');
-    console.log(`Your nearest stop is ${nearestStop.commonName}, just ${Math.floor(stop1.distance)}m away.`);
-    console.log(`Your second nearest stop is ${secondNearestStop.commonName}, ${Math.floor(stop2.distance)}m away.`);
-    console.log("-----------------------");
-    console.log(`----Buses from ${nearestStop.commonName}----`);
-    console.log("-----------------------");
-    await nextArrivalTime(nearestStop.naptanId);
-    console.log("-----------------------");
-    console.log(`----Buses from ${secondNearestStop.commonName}----`);
-    console.log("-----------------------");
-    await nextArrivalTime(secondNearestStop.naptanId);
-}
+
 getStopsByPostcode();
