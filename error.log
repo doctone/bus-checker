@@ -1,6 +1,3 @@
-{"level":"error","message":"Could not find postcodetest1"}
-{"level":"error","message":"Could not find postcode3r"}
-{"level":"error","message":"Could not find postcode3rt"}
 {"level":"error","message":"invalid postcode","service":"user-service"}
 {"level":"error","message":"invalid postcode","service":"user-service"}
 {"level":"error","message":"invalid postcode","service":"user-service"}
