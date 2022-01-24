@@ -69,7 +69,7 @@ async function getStopsByPostcode(){
                     validStops.push(stop);
                     }
                 }
-            await printNearestStops(validStops);
+            await printNearestStops(validStops, postCode);
             // console.log(stop1,stop2);
             }
         }
@@ -78,7 +78,7 @@ async function getStopsByPostcode(){
         getStopsByPostcode();
     }
 }
-async function printNearestStops(validStops){
+async function printNearestStops(validStops, postCode){
     console.log('-----------------------');
     console.log('---BUS ARRIVAL TIMES---');
     console.log('-----------------------');
@@ -87,6 +87,8 @@ async function printNearestStops(validStops){
         console.log(`----Buses from ${validStops[i].commonName}----`);
         console.log("-----------------------");
         await printNextArrivalTime(validStops[i].children[0].id);
+        console.log("-----------------------");
+        await fetchJourney(postCode, validStops[i].children[0].id);
         console.log("-----------------------");
 
     }
@@ -112,6 +114,33 @@ async function printNextArrivalTime(id){
         }
         });
     }
-    
+async function fetchJourney (postCode, naptanId){
+    const url = "https://api.tfl.gov.uk/Journey/JourneyResults/"+postCode+"/to/"+naptanId+"?api_key="+API_KEY;
+    //https://api.tfl.gov.uk/Journey/JourneyResults/NW51TL/to/490006943N?api_key=4c2ec6355dc441148aedf4a24a48bb8
+
+    let response = await fetch(url);
+    let data = await response.json();
+    //console.log(data.journeys);
+    let numberOfWays = data.journeys.length;
+    let wayNr=1;
+    for (let j in data.journeys) {
+        //console.log (data.journeys[j].legs);
+        if (numberOfWays>0) {
+            console.log ("ROUTE NR "+wayNr.toString());
+            wayNr++;
+        }
+        for (const leg of data.journeys[j].legs) {
+            console.log ("SUMMARY: "+leg.instruction.summary);
+            //console.log(leg.instruction.steps);
+            if (leg.instruction.steps.length>0) {
+                console.log ("STEPS: ");
+                for (let st in leg.instruction.steps) {
+                    console.log(leg.instruction.steps[st].descriptionHeading+" "+
+                        leg.instruction.steps[st].description);
+                }
+            }
+        }
+    }
+}
 
 getStopsByPostcode();
