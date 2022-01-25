@@ -32,9 +32,9 @@ const API_KEY = "75d6773ad7b647d199cd728959050908";
 async function getStopsByPostcode(){
     let postcodeResponse;
     let body = ''
-    const postCode = prompt("Please specify a postcode: ");
     do {
         try {
+            const postCode = prompt("Please specify a postcode: ");
             postcodeResponse = await fetch(`http://api.postcodes.io/postcodes/${postCode}`);
             body = await postcodeResponse.json();
             if (!body.result){
@@ -45,7 +45,7 @@ async function getStopsByPostcode(){
             logger.error('invalid postcode');
         }
     }
-    while (body === false);
+    while (body === '');
     
     const longitude = body.result.longitude;
     const latitude = body.result.latitude;
